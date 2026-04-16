@@ -120,26 +120,26 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-100 font-sans">
       {/* 橫幅使用品牌色 #131e2c */}
-      <header style={{ backgroundColor: '#131e2c' }} className="p-6 md:p-10 text-white shadow-xl">
-  <div className="max-w-6xl mx-auto flex flex-col items-center gap-3 md:gap-4">
+      <header style={{ backgroundColor: '#131e2c', padding: '40px 20px' }} className="text-white shadow-xl">
+  <div className="max-w-6xl mx-auto flex flex-col items-center gap-4">
     
-    {/* Logo 容器：手機縮小，電腦放大 */}
-    <div className="mb-2 flex justify-center w-full">
+    {/* Logo：直接用 inline-style 鎖死高度 */}
+    <div className="mb-2">
       <img 
         src="/logo.png" 
         alt="Great Spark Logo" 
-        className="h-12 md:h-20 w-auto max-w-[200px] md:max-w-none object-contain drop-shadow-md" 
-        onError={(e) => e.target.style.display = 'none'}
+        style={{ height: '50px', width: 'auto', display: 'block' }} // 強制鎖定手機端高度
+        className="md:!h-20 object-contain drop-shadow-md" 
       />
     </div>
 
-    {/* 標題文字：手機端縮小字體 (text-2xl)，電腦端放大 (md:text-4xl) */}
-    <h1 className="text-2xl md:text-4xl text-white font-black tracking-tight flex items-center justify-center gap-2 text-center">
-      <Scissors className="text-blue-400 w-6 h-6 md:w-10 md:h-10 shrink-0" />
-      <span>LINE 貼圖製作神器</span>
+    {/* 標題：用 style={{ color: 'white' }} 鎖死顏色 */}
+    <h1 style={{ color: '#ffffff' }} className="text-2xl md:text-4xl font-black tracking-tight flex items-center justify-center gap-3">
+      <Scissors className="text-blue-400 w-8 h-8 md:w-10 md:h-10" />
+      LINE 貼圖製作神器
     </h1>
     
-    <p className="text-slate-400 text-sm md:text-base font-medium text-center">
+    <p style={{ color: '#94a3b8' }} className="font-medium text-sm md:text-base">
       星策創新 Great Spark 技術支持
     </p>
   </div>
