@@ -15,22 +15,23 @@ export default function App() {
 
   // 【樣式補丁】強迫注入 Tailwind 與基礎樣式，防止編譯失敗導致排版亂掉
   useEffect(() => {
-    // 注入 Tailwind CDN
+    // 強制補丁：確保在手機端也能正確抓到樣式
     if (!document.getElementById('tailwind-cdn')) {
       const script = document.createElement('script');
       script.id = 'tailwind-cdn';
       script.src = "https://cdn.tailwindcss.com";
       document.head.appendChild(script);
     }
-    // 載入 JSZip
-    if (!window.JSZip) {
-      const script = document.createElement('script');
-      script.src = "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js";
-      document.head.appendChild(script);
-    }
+    
+    // 增加一個樣式補丁，解決某些手機瀏覽器背景變黑或文字跑掉的問題
+    const style = document.createElement('style');
+    style.innerHTML = `
+      body { background-color: #f1f5f9 !important; margin: 0; padding: 0; }
+      #root { width: 100%; overflow-x: hidden; }
+    `;
+    document.head.appendChild(style);
   }, []);
-
-  const handleImageUpload = (e) => {
+  function handleImageUpload(e) {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
@@ -39,13 +40,13 @@ export default function App() {
         img.onload = () => {
           setImage(event.target.result);
           setOriginalImageObj(img);
-          setProcessedStickers([]); 
+          setProcessedStickers([]);
         };
         img.src = event.target.result;
       };
       reader.readAsDataURL(file);
     }
-  };
+  }
 
   const removeBackgroundFromEdges = (ctx, width, height, tolerance, bgR, bgG, bgB) => {
     const imgData = ctx.getImageData(0, 0, width, height);
@@ -119,26 +120,30 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-100 font-sans">
       {/* 橫幅使用品牌色 #131e2c */}
-      <header style={{ backgroundColor: '#131e2c' }} className="p-8 text-white shadow-xl">
-        <div className="max-w-6xl mx-auto flex flex-col items-center gap-4">
-          
-          {/* Logo 讀取語法 */}
-          <div className="mb-2">
-            <img 
-              src="/logo.png" 
-              alt="Great Spark Logo" 
-              className="h-24 w-auto object-contain drop-shadow-md" 
-              onError={(e) => e.target.style.display = 'none'} // 如果圖檔不存在就隱藏，避免出現破圖圖示
-            />
-          </div>
+      <header style={{ backgroundColor: '#131e2c' }} className="p-6 md:p-10 text-white shadow-xl">
+  <div className="max-w-6xl mx-auto flex flex-col items-center gap-3 md:gap-4">
+    
+    {/* Logo 容器：手機縮小，電腦放大 */}
+    <div className="mb-2 flex justify-center w-full">
+      <img 
+        src="/logo.png" 
+        alt="Great Spark Logo" 
+        className="h-12 md:h-20 w-auto max-w-[200px] md:max-w-none object-contain drop-shadow-md" 
+        onError={(e) => e.target.style.display = 'none'}
+      />
+    </div>
 
-          <h1 className="text-3xl md:text-4xl text-white tracking-tight flex items-center gap-3">
-            <Scissors className="text-blue-400 w-10 h-10" />LINE 貼圖製作神器
-          </h1>
-          <p className="text-white-400 font-medium">星策創新 Great Spark 技術支持</p>
-        </div>
-      </header>
-
+    {/* 標題文字：手機端縮小字體 (text-2xl)，電腦端放大 (md:text-4xl) */}
+    <h1 className="text-2xl md:text-4xl text-white font-black tracking-tight flex items-center justify-center gap-2 text-center">
+      <Scissors className="text-blue-400 w-6 h-6 md:w-10 md:h-10 shrink-0" />
+      <span>LINE 貼圖製作神器</span>
+    </h1>
+    
+    <p className="text-slate-400 text-sm md:text-base font-medium text-center">
+      星策創新 Great Spark 技術支持
+    </p>
+  </div>
+</header>
       <main className="max-w-6xl mx-auto p-4 md:p-8">
         <div className="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden grid grid-cols-1 lg:grid-cols-2 gap-0">
           
